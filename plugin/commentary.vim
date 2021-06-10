@@ -10,7 +10,7 @@ let g:loaded_commentary = 1
 
 function! s:surroundings() abort
   return split(get(b:, 'commentary_format', substitute(substitute(substitute(
-        \ &commentstring, '^$', '%s', ''), '\S\zs%s',' %s', '') ,'%s\ze\S', '%s ', '')), '%s', 1)
+        \ &commentstring, '^$', '%s', ''), '\s\zs%s',' %s', '') ,'%s\ze\s', '%s ', '')), '%s', 1)
 endfunction
 
 function! s:strip_white_space(l,r,line) abort
@@ -50,8 +50,14 @@ function! s:go(...) abort
     let indent = '^\s*'
   endif
 
-  let lines = []
   for lnum in range(lnum1,lnum2)
+    if lnum2 - lnum1 > 0
+      "execute 'normal! o\<esc>O"""\<esc>gvo\<esc>o"""\<Esc>'
+      "execute 'normal! o\<esc>'
+      let key = nvim_replace_termcodes("\'<O\"\"\"<Esc>'>o\"\"\"<Esc>", v:true, v:false, v:true)
+      call nvim_feedkeys(key, 'n', v:true)
+      break
+    endif
     let line = getline(lnum)
     if strlen(r) > 2 && l.r !~# '\\'
       let line = substitute(line,
@@ -63,9 +69,8 @@ function! s:go(...) abort
     else
       let line = substitute(line,'^\%('.matchstr(getline(lnum1),indent).'\|\s*\)\zs.*\S\@<=','\=l.submatch(0).r','')
     endif
-    call add(lines, line)
+    call setline(lnum,line)
   endfor
-  call setline(lnum1, lines)
   let modelines = &modelines
   try
     set modelines=0
