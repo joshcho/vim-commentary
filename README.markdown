@@ -1,8 +1,8 @@
 # commentary.vim
 
 > This is a fork of vim-commentary, where commenting on visual block of height
-> > 1 results in wrapping the text with lines with """ (for Julia and Python).
-> > Uncommenting is not yet supported.
+> 1 results in wrapping the text with lines with """ (for Julia and Python).
+> Uncommenting is not yet supported.
 
 Comment stuff out.  Use `gcc` to comment out a line (takes a count),
 `gc` to comment out the target of a motion (for example, `gcap` to
